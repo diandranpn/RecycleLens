@@ -5,6 +5,6 @@ Kelompok The Orange Guys
 
 Ketua Kelompok : 
 
-Anggota 1 : 
+Anggota 1 : Nur Azzam Wafiuddin-21/479115/TK/52806
 
 Anggota 2 : 
