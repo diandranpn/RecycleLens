@@ -7,4 +7,4 @@ Ketua Kelompok : In'am Nurul Fuady
 
 Anggota 1 : Diandra Nabila Putri Nugroho - 21/473599/TK/52202
 
-Anggota 2 : 
+Anggota 2 : Nur Azzam Wafiuddin - 21/479115/TK/52806
