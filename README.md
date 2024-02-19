@@ -3,7 +3,7 @@ Aplikasi ini merupakan aplikasi pengklasifikasian sampah berbasis AI dengan mema
 
 Kelompok The Orange Guys
 
-Ketua Kelompok : 
+Ketua Kelompok : In'am Nurul Fuady
 
 Anggota 1 : 
 
