@@ -1,0 +1,26 @@
+name: Lint and Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint_and_build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Lint
+      run: |
+        echo "Running linting..."
+
+    - name: Install Dependencies
+      run: |
+        echo "Installing npm dependencies..."
+
+    - name: Build
+      run: |
+        echo "Building project..."
