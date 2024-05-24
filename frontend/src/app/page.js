@@ -2,6 +2,7 @@ import Navbar from "@/components/molekul/navbar";
 import Logo from "../../public/bg-main.svg";
 import Image from "next/image";
 import Carousell from "@/components/molekul/carousell";
+import Leaflet from "@/components/molekul/leaflet";
 
 export default function Home() {
   return (
@@ -30,11 +31,16 @@ export default function Home() {
           />{" "}
         </div>
       </div>
-      <div className="w-full flex justify-end">
+      <div className="w-full flex justify-between">
+        <div className="font-bold hidden md:flex p-5 text-white items-center text-center justify-center md:mx-[10vw] mx-5 md:w-[30%] max-w-[400px]">
+          "Articles to keep your knowledge sharp containing up-to-date
+          information about waste management."
+        </div>
         <div className="my-11 w-[430px] md:w-[580px] md:relative md:right-0 mx-auto md:mr-0">
           <Carousell />
         </div>
       </div>
+      <Leaflet/>
     </main>
   );
 }
