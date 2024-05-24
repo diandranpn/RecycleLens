@@ -1,6 +1,7 @@
 import Navbar from "@/components/molekul/navbar";
 import Logo from "../../public/bg-main.svg";
 import Image from "next/image";
+import Carousell from "@/components/molekul/carousell";
 
 export default function Home() {
   return (
@@ -19,16 +20,20 @@ export default function Home() {
           {" "}
           Scan now{" "}
         </button>
+        <div className="absolute top-0 left-0 z-[-1] w-full md:h-full h-[40vh] overflow-x-hidden">
+          <Image
+            src={Logo}
+            layout="fill"
+            objectFit="cover"
+            alt="Logo"
+            className="md:min-w-[100vw] min-w-[400px]"
+          />{" "}
+        </div>
       </div>
-
-      <div className="absolute top-0 left-0 z-[-1] w-full md:h-full h-[40vh] overflow-x-hidden">
-        <Image
-          src={Logo}
-          layout="fill"
-          objectFit="cover"
-          alt="Logo"
-          className="md:min-w-[100vw] min-w-[400px]"
-        />{" "}
+      <div className="w-full flex justify-end">
+        <div className="my-11 w-[430px] md:w-[580px] md:relative md:right-0 mx-auto md:mr-0">
+          <Carousell />
+        </div>
       </div>
     </main>
   );
