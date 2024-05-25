@@ -1,5 +1,5 @@
 const { default: mongoose } = require("mongoose");
-const ArticleModel = require("../models/articleModel");
+const ArticleModel = require("../models/articleModels");
 
 exports.getArticle = async (req, res, next) => {
   try {

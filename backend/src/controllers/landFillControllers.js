@@ -1,5 +1,5 @@
 const { default: mongoose } = require("mongoose");
-const landFillModel = require("../models/landFillModel");
+const landFillModel = require("../models/landFillModels");
 
 exports.getAllLandFills = async (req, res, next) => {
     try {
@@ -46,7 +46,6 @@ exports.createLandFill = async (req, res, next) => {
     try {
       const { latitude, longitude } = req.query;
   
-      // Convert latitude and longitude to numbers
       const lat = parseFloat(latitude);
       const long = parseFloat(longitude);
   
@@ -54,7 +53,6 @@ exports.createLandFill = async (req, res, next) => {
         return res.status(400).json({ error: "Latitude and longitude must be provided as numbers" });
       }
   
-      // Query to find landfills within 10 km of the specified point
       const nearbyLandFills = await landFillModel.aggregate([
         {
           $geoNear: {
