@@ -1,5 +1,9 @@
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require("body-parser");
+
+const ConnectToMongodb = require("./src/lib/db");
+
 const app = express();
 const frontendDomain = process.env.DOMAIN_FRONTEND || "http://localhost:3000";
 app.use(
@@ -12,6 +16,7 @@ app.use(
 app.use(bodyParser.json({ limit: "1000mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "1000mb" }));
 
+ConnectToMongodb();
 
 const port = process.env.PORT || 5001;
 
