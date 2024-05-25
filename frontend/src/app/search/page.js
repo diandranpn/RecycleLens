@@ -41,17 +41,36 @@ const Search = () => {
       </button>
       <div
         ref={searchBarRef}
-        className={`fixed bottom-0 left-0 px-4 w-full bg-white shadow-lg transform transition-transform duration-300 z-[900] h-[300px] ${
+        className={`fixed bottom-0 left-0 px-4 w-full bg-white shadow-lg transform transition-transform duration-300 z-[900] h-[350px] rounded-t-xl ${
           isSearchVisible ? "translate-y-0" : "translate-y-full"
         }`}
       >
-        <input
-          type="text"
-          className="w-full max-w-md border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 p-3 text-base py-0 my-2 font-bold"
-          placeholder="Search..."
-          value={query}
-          onChange={handleChange}
-        />
+        <div className="text-3xl font-bold m-3">Find Nearby Landfill</div>
+        <p className="text-xs m-2">
+          Type your current location and we will find nearby landfill around
+          you!
+        </p>
+        <div className="flex w-full">
+          <div>
+          <img
+            src={"./marker.svg"}
+            layout="fill"
+            objectFit="cover"
+            alt="Logo"
+            className="max-w-[40px] max-h-[40px] relative"
+          />
+          </div>
+          <input
+            type="text"
+            className="w-full max-w-md border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 p-5 text-xl py-0 my-2 font-bold"
+            placeholder="Search..."
+            value={query}
+            onChange={handleChange}
+          />
+        </div>
+        <button className="rounded-full p-3 bg-primary text-white font-bold my-3 w-full">
+          Search
+        </button>
       </div>
       <FooterMobileView activePage={"maps"} />
     </>
