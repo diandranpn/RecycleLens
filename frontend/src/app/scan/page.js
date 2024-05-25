@@ -1,19 +1,28 @@
 "use client"
+import FooterMobileView from '@/components/molekul/footerMobileView';
 import React, { useState, useRef, useEffect } from 'react';
 
 const PhotoUpload = () => {
   const [imageData, setImageData] = useState(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const startVideo = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
-      } catch (err) {
-        console.error("Error accessing camera: ", err);
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+            videoRef.current.play();
+          }
+        } catch (err) {
+          setError(err);
+          console.error("Error accessing camera: ", err);
+        }
+      } else {
+        setError(new Error("Camera access is not supported on this device."));
       }
     };
     startVideo();
@@ -46,6 +55,7 @@ const PhotoUpload = () => {
 
   return (
     <div className="photo-upload">
+      {error && <div>Error: {error.message}</div>}
       <h2>Take a Photo</h2>
       <video ref={videoRef} style={{ width: '100%', maxWidth: '400px' }}></video>
       <button onClick={handleCapture}>Capture</button>
@@ -56,6 +66,7 @@ const PhotoUpload = () => {
         </div>
       )}
       <canvas ref={canvasRef} style={{ display: 'none' }} width="400" height="300"></canvas>
+      <FooterMobileView activePage={'recycleLens'}/>
     </div>
   );
 };
