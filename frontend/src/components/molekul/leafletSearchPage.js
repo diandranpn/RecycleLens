@@ -2,10 +2,21 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import React, { useEffect, useState } from "react";
+import { LuCodesandbox } from "react-icons/lu";
+
 
 const LeafletSearch = () => {
   const [position, setPosition] = useState(null);
   const [randomPoints, setRandomPoints] = useState([]);
+
+  const customIcon = new L.Icon({
+    iconUrl: '/marker.svg', 
+    iconSize: [25, 41], 
+    iconAnchor: [12, 41], 
+    popupAnchor: [1, -34], 
+    shadowSize: [41, 41], 
+    shadowAnchor: [12, 41]
+  });
 
   useEffect(() => {
     const generateRandomPoints = (basePosition, numPoints) => {
@@ -54,7 +65,7 @@ const LeafletSearch = () => {
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {randomPoints.map((point, index) => (
-            <Marker key={index} position={point}>
+            <Marker key={index} position={point} icon={customIcon}>
               <Popup>
                 Random Point {index + 1}: {point[0].toFixed(6)}, {point[1].toFixed(6)}
               </Popup>

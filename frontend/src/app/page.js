@@ -3,6 +3,7 @@ import Logo from "../../public/bg-main.svg";
 import Image from "next/image";
 import Carousell from "@/components/molekul/carousell";
 import Leaflet from "@/components/molekul/leaflet";
+import FooterMobileView from "@/components/molekul/footerMobileView";
 
 export default function Home() {
   return (
@@ -41,6 +42,7 @@ export default function Home() {
         </div>
       </div>
       <Leaflet/>
+      <FooterMobileView activePage={"home"}/>
     </main>
   );
 }
