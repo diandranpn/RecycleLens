@@ -5,14 +5,17 @@ const LandFillSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  lat: {
-    type: Number,
-    required: true,
-  },
-  lang: {
-    type: Number,
-    required: true,
-  },
+  location: {
+    type: {
+        type: String,
+        enum: ['Point'], 
+        default: 'Point'
+    },
+    coordinates: {
+        type: [Number], 
+        required: true
+    }
+},
   description: {
     type: String,
     required: true,
@@ -23,5 +26,6 @@ const LandFillSchema = new mongoose.Schema({
   },
 });
 
+LandFillSchema.index({ location: "2dsphere" });
+
 module.exports = mongoose.model("LandFill", LandFillSchema);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

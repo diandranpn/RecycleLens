@@ -19,16 +19,15 @@ exports.getAllLandFills = async (req, res, next) => {
 
 exports.createLandFill = async (req, res, next) => {
     try {
-      const { name, lat, lang, description, city } = req.body;
-  
-      if (!name || !lat || !lang || !description || !city) {
+      const { name, location, description, city } = req.body;
+      if (!name || !location || !description || !city) {
+        
         return res.status(400).json({ error: "Missing required fields" });
       }
   
       const newLandFill = new landFillModel({
         name,
-        lat,
-        lang,
+        location,
         description,
         city,
       });
@@ -52,6 +51,7 @@ exports.createLandFill = async (req, res, next) => {
       if (isNaN(lat) || isNaN(long)) {
         return res.status(400).json({ error: "Latitude and longitude must be provided as numbers" });
       }
+      console.log([long, lat])
   
       const nearbyLandFills = await landFillModel.aggregate([
         {
