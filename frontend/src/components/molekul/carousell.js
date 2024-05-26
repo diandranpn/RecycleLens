@@ -1,14 +1,26 @@
 "use client"
-
 import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import CarousellCard from "../atom/carousellCard";
 import "swiper/css";
+import axios from "axios";
+import CarousellCard from "../atom/carousellCard";
 
 const Carousell = () => {
-  const [slidesPerView, setSlidesPerView] = useState(3); 
+  const [slidesPerView, setSlidesPerView] = useState(3);
+  const [articles, setArticles] = useState([]);
 
   useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/article/get-list');
+        setArticles(response.data);
+      } catch (error) {
+        console.error("Error fetching articles:", error);
+      }
+    };
+
+    fetchArticles();
+
     const handleResize = () => {
       if (window.innerWidth > 768) {
         setSlidesPerView(4);
@@ -26,8 +38,6 @@ const Carousell = () => {
     };
   }, []);
 
-  const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
   return (
     <Swiper
       spaceBetween={0}
@@ -35,9 +45,11 @@ const Carousell = () => {
       onSlideChange={() => console.log("slide change")}
       onSwiper={(swiper) => console.log(swiper)}
     >
-      {data.map((row) => (
-        <SwiperSlide key={row}>
-          <CarousellCard />
+      {articles.map((article) => (
+        <SwiperSlide key={article._id}>
+          <CarousellCard
+            row={article}
+          />
         </SwiperSlide>
       ))}
     </Swiper>

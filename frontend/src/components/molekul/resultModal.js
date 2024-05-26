@@ -2,7 +2,8 @@ import React from "react";
 import { FaRecycle } from "react-icons/fa";
 
 const ResultModal = ({ show, onClose, children, data }) => {
-    console.log(data.class_probs)
+    console.log(data.predicted_class)
+    console.log(data?.predicted_class == "Organic_Waste")
   const color =
     data?.predicted_class === "Organic_Waste" || data.predicted_class === "Wood"
       ? "#21744E"
@@ -14,7 +15,7 @@ const ResultModal = ({ show, onClose, children, data }) => {
 
   return (
     <div
-      className={`bg-[${color}] absolute top-0 bottom-0 w-screen h-screen bg-black/25 z-[950]`}
+      className={`${data?.predicted_class == "Organic_Waste" || data?.predicted_class =="Wood" ? "bg-[#21744E]" : "bg-[#DB0000]"} absolute top-0 bottom-0 w-screen h-screen z-[950]`}
     >
       <div className="bg-white shadow-[0_-10px_20px_-15px_rgba(0,0,0,0.3)] rounded-lg absolute bottom-0 h-[75vh] w-full">
         <div className="font-bold mx-auto text-black text-3xl text-center m-5">

@@ -5,7 +5,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "RecycleLens",
-  description: "AI base software to help u clasify the trash",
+  description: "AI base software to help you clasify the trash",
 };
 
 export default function RootLayout({ children }) {
