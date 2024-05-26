@@ -2,6 +2,8 @@
 import BackButton from "@/components/atom/backButton";
 import FooterMobileView from "@/components/molekul/footerMobileView";
 import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
+import ResultModal from "@/components/molekul/resultModal";
 
 const PhotoUpload = () => {
   const [imageData, setImageData] = useState(null);
@@ -9,6 +11,9 @@ const PhotoUpload = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [error, setError] = useState(null);
+  const [prediction, setPrediction] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   useEffect(() => {
     const startVideo = async () => {
@@ -55,6 +60,12 @@ const PhotoUpload = () => {
   const handleRetake = () => {
     setImageData(null);
     setIsVideoVisible(true);
+    setPrediction(null);
+  };
+
+  
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   const handleUpload = async () => {
@@ -63,12 +74,21 @@ const PhotoUpload = () => {
       return;
     }
 
-    const blob = await (await fetch(imageData)).blob();
-    const formData = new FormData();
-    formData.append("file", blob, "photo.png");
-
     try {
-      alert("File uploaded successfully!");
+      const blob = await (await fetch(imageData)).blob();
+      const formData = new FormData();
+      formData.append("image", blob, "photo.png");
+
+      const response = await axios.post("http://localhost:5000/predict", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log(response);
+
+      setPrediction(response.data);
+      setIsModalOpen(true);
     } catch (error) {
       console.error("Error uploading file:", error);
       alert("Error uploading file");
@@ -86,35 +106,50 @@ const PhotoUpload = () => {
       </div>
       {isVideoVisible && (
         <div className="w-full p-3">
-
-        <button
-          onClick={handleCapture}
-          className="bg-primary text-white py-2 w-full rounded-lg text-xs font-bold"
-        >
-          Capture
-        </button>
+          <button
+            onClick={handleCapture}
+            className="bg-primary text-white py-2 w-full rounded-lg text-xs font-bold"
+          >
+            Capture
+          </button>
         </div>
       )}
       {!isVideoVisible && imageData && (
         <div className="w-full p-3">
           <div className="w-full h-[70vh] flex flex-col justify-center">
             <img src={imageData} alt="Captured" className="rounded-lg w-full" />
-              </div>
-            <div className="flex justify-around mt-2">
-              <button
-                onClick={handleRetake}
-                className="bg-white text-primary py-2 w-full mx-3 rounded-lg text-xs font-bold border-primary border"
-              >
-                Retake
-              </button>
-              <button
-                onClick={handleUpload}
-                className="bg-primary text-white py-2 w-full mx-3 rounded-lg text-xs font-bold"
-              >
-                Use Photo
-              </button>
-            </div>
+          </div>
+          <div className="flex justify-around mt-2">
+            <button
+              onClick={handleRetake}
+              className="bg-white text-primary py-2 w-full mx-3 rounded-lg text-xs font-bold border-primary border"
+            >
+              Retake
+            </button>
+            <button
+              onClick={handleUpload}
+              className="bg-primary text-white py-2 w-full mx-3 rounded-lg text-xs font-bold"
+            >
+              Use Photo
+            </button>
+          </div>
         </div>
+      )}
+      {prediction && (
+        <ResultModal show={isModalOpen} onClose={closeModal} data={prediction}>
+        <div className="w-full p-3">
+          <h2>Prediction Results</h2>
+          <p>Class: {prediction.predicted_class}</p>
+          <p>Probability: {(prediction.probability * 100).toFixed(2)}%</p>
+          <ul>
+            {prediction.class_probs.map((class_prob) => (
+              <li key={class_prob[0]}>
+                {class_prob[0]}: {(class_prob[1] * 100).toFixed(2)}%
+              </li>
+            ))}
+          </ul>
+        </div>
+        </ResultModal>
       )}
       <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
       <FooterMobileView activePage={"recycleLens"} />

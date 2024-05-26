@@ -12,7 +12,7 @@ const BackButton = () => {
   return (
     <button
       onClick={handleBack}
-      className="fixed top-4 left-4 p-2  hover:bg-gray-700 text-black bg-white rounded-full shadow-lg z-[1000] shadow-md"
+      className="fixed top-4 left-4 p-2  hover:bg-gray-700 text-black bg-white rounded-full drop-shadow-lg z-[1000] shadow-md"
     >
       <FaArrowLeft size={24} />
     </button>

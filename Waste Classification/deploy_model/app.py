@@ -1,5 +1,6 @@
-from flask import Flask, request, render_template  
+from flask import Flask, request, render_template ,jsonify
 from PIL import Image  
+from flask_cors import CORS
 import torch  
 import torchvision
 import torchvision.transforms as transforms
@@ -10,6 +11,7 @@ import base64
 CLASS_NAME = ['Aluminium', 'Carton', 'E-waste', 'Glass', 'Organic_Waste', 'Paper_and_Cardboard', 'Plastics', 'Textiles', 'Wood']
 
 app = Flask(__name__)
+CORS(app) 
 
 @app.route('/')
 def home():
@@ -30,17 +32,22 @@ def build_model():
 model = build_model()
 
 def process_image(image):
-    transformation  = transforms.Compose([
-    transforms.Resize((224,224)),
-    transforms.ToTensor(),
-    transforms.CenterCrop(224),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                         std=[0.299, 0.224, 0.225])
+    # Convert RGBA to RGB if necessary
+    if image.mode == 'RGBA':
+        image = image.convert('RGB')
+    
+    transformation = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.CenterCrop(224),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                             std=[0.299, 0.224, 0.225])
     ])
 
     image_tensor = transformation(image).unsqueeze(0)
 
     return image_tensor
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -67,18 +74,12 @@ def predict():
     class_probs = list(zip(CLASS_NAME, probabilities))
     class_probs.sort(key=lambda x: x[1], reverse=True)
 
-    # Prepare image for display
-    img_byte_arr = io.BytesIO()
-    Image.open(image).save(img_byte_arr, format='PNG')
-    img_byte_arr = img_byte_arr.getvalue()
-
-    # Encode image data to base64
-    img_base64 = base64.b64encode(img_byte_arr).decode('utf-8')
-    
-    # Render HTML page with prediction results and image
-    return render_template('predict.html', class_probs=class_probs,
-                        predicted_class=predicted_class, probability=probability,
-                        image=img_base64)
+    # Return JSON response
+    return jsonify({
+        'predicted_class': predicted_class,
+        'probability': float(probability),
+        'class_probs': [(class_name, float(prob)) for class_name, prob in class_probs]
+    })
 
 
 if __name__ == '__main__':

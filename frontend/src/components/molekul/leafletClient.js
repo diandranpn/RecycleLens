@@ -1,9 +1,21 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 
 const Leaflet = () => {
   const [position, setPosition] = useState(null);
   const [isMounted, setIsMounted] = useState(false);
+
+  const customIcon = new L.Icon({
+    iconUrl: "/marker.svg",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+    shadowAnchor: [12, 41],
+  });
 
   useEffect(() => {
     setIsMounted(true);
@@ -45,53 +57,25 @@ const Leaflet = () => {
   }, [isMounted]);
 
   return (
-    <div className="md:w-[50vw]">
-      {position && <MapComponent position={position} />}
+    <div className="md:w-[50vw] my-7 mx-2">
+      {position && (
+        <MapContainer
+          center={position}
+          zoom={19}
+          scrollWheelZoom
+          className="w-full h-[30vh] rounded-lg border-2"
+          attributionControl={false}
+        >
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <Marker position={position} icon={customIcon}>
+            <Popup>
+              <div>You</div>
+            </Popup>
+          </Marker>
+        </MapContainer>
+      )}
     </div>
   );
-};
-
-const MapComponent = ({ position }) => {
-  const [map, setMap] = useState(null);
-
-  useEffect(() => {
-    if (position) {
-      import("react-leaflet").then(
-        ({ MapContainer, TileLayer, Marker, Popup }) => {
-          setMap(
-            <MapContainer
-              center={position}
-              zoom={13}
-              scrollWheelZoom
-              className="md:w-[40vw] h-[30vh] m-16 rounded-lg"
-              attributionControl={false}
-            >
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <Marker
-                position={position}
-                icon={
-                  new L.Icon({
-                    iconUrl: "/marker.svg",
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowSize: [41, 41],
-                    shadowAnchor: [12, 41],
-                  })
-                }
-              >
-                <Popup>
-                  A pretty CSS3 popup. <br /> Easily customizable.
-                </Popup>
-              </Marker>
-            </MapContainer>
-          );
-        }
-      );
-    }
-  }, [position]);
-
-  return map;
 };
 
 export default Leaflet;
