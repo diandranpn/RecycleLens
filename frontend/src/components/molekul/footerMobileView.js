@@ -17,7 +17,7 @@ const FooterMobileView = ({ activePage }) => {
   };
 
   return (
-    <div className='absolute bottom-0 z-[900] w-full bg-white shadow-[0_-10px_20px_-15px_rgba(0,0,0,0.3)] md:hidden h-[100px] flex justify-around'>
+    <div className='fixed bottom-0 z-[900] w-full bg-white shadow-[0_-10px_20px_-15px_rgba(0,0,0,0.3)] md:hidden h-[100px] flex justify-around'>
       <div
         className={`mx-3 h-full flex flex-col justify-center items-center ${getActiveClass('home')}`}
         onClick={() => navigateTo('/')}

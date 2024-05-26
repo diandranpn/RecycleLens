@@ -57,7 +57,7 @@ const Leaflet = () => {
   }, [isMounted]);
 
   return (
-    <div className="md:w-[50vw] my-7 mx-2">
+    <div className="md:w-[50vw] pb-16 mt-7 mx-2">
       {position && (
         <MapContainer
           center={position}
@@ -74,6 +74,7 @@ const Leaflet = () => {
           </Marker>
         </MapContainer>
       )}
+      <div className="min-h-[100px]"></div>
     </div>
   );
 };

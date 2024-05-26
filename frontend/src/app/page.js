@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Navbar from "@/components/molekul/navbar";
 import Logo from "../../public/bg-main.svg";
 import Image from "next/image";
@@ -14,14 +15,16 @@ export default function Home() {
           An AI - based waste classification tool, ready to assist your
           sustainable journey!
         </div>
+        {/* Scan button for desktop */}
         <button className="font-bold text-primary w-full mt-5 bg-white rounded-xl p-1 shadow-lg hidden md:flex justify-center items-center">
-          {" "}
-          Scan and Classify{" "}
+          Scan and Classify
         </button>
-        <button className="font-bold text-primary w-[40vw] mt-5 bg-white rounded-xl p-1 shadow-lg md:hidden">
-          {" "}
-          Scan now{" "}
-        </button>
+        {/* Scan button for mobile */}
+        <Link href="/scan">
+          <button className="font-bold text-primary w-[40vw] mt-5 bg-white rounded-xl p-1 shadow-lg md:hidden">
+            Scan now
+          </button>
+        </Link>
         <div className="absolute top-0 left-0 z-[-1] w-full md:h-full h-[40vh] overflow-x-hidden">
           <Image
             src={Logo}
@@ -29,7 +32,7 @@ export default function Home() {
             objectFit="cover"
             alt="Logo"
             className="md:min-w-[100vw] min-w-[400px]"
-          />{" "}
+          />
         </div>
       </div>
       <div className="w-full flex justify-between">
@@ -41,8 +44,8 @@ export default function Home() {
           <Carousell />
         </div>
       </div>
-      <Leaflet/>
-      <FooterMobileView activePage={"home"}/>
+      <Leaflet />
+      <FooterMobileView activePage={"home"} />
     </main>
   );
 }

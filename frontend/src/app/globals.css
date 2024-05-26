@@ -3,7 +3,14 @@
 @tailwind utilities;
 
 
-.trapesium {
-    border-left: 32px solid transparent;
-    border-right: 32px solid transparent;
-}
+@media (min-width: 721px) {
+    .container {
+      display: none;
+    }
+    .unsupported-text {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        font-size: 18px;
+      }
+  }
