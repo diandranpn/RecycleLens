@@ -51,7 +51,6 @@ exports.createLandFill = async (req, res, next) => {
       if (isNaN(lat) || isNaN(long)) {
         return res.status(400).json({ error: "Latitude and longitude must be provided as numbers" });
       }
-      console.log([long, lat])
   
       const nearbyLandFills = await landFillModel.aggregate([
         {
@@ -73,3 +72,23 @@ exports.createLandFill = async (req, res, next) => {
       res.status(500).json({ error: "Internal Server Error" });
     }
   };
+
+  exports.findLandFillByName = async (req, res, next) => {
+    try {
+        const { name } = req.query;
+
+        if (!name) {
+            return res.status(400).json({ error: "Name query parameter is required" });
+        }
+
+        const landFills = await landFillModel.find({ name: new RegExp(name, 'i') });
+        if (!landFills || landFills.length === 0) {
+            return res.status(404).json({ error: "No landfills found with the specified name" });
+        }
+
+        res.status(200).json(landFills);
+    } catch (err) {
+        console.error("Error finding LandFills by name:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};

@@ -1,16 +1,12 @@
-"use client";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
 import React, { useEffect, useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import axios from "axios";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 const LeafletSearch = () => {
   const [position, setPosition] = useState(null);
-  const [randomPoints, setRandomPoints] = useState([]);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const [markers, setMarkers] = useState([]);
 
   const customIcon = new L.Icon({
     iconUrl: "/marker.svg",
@@ -22,61 +18,58 @@ const LeafletSearch = () => {
   });
 
   useEffect(() => {
-    if (isMounted) {
-      const generateRandomPoints = (basePosition, numPoints) => {
-        const points = [];
-        for (let i = 0; i < numPoints; i++) {
-          const randomLat = basePosition[0] + (Math.random() - 0.5) * 0.01;
-          const randomLng = basePosition[1] + (Math.random() - 0.5) * 0.01;
-          points.push([randomLat, randomLng]);
-        }
-        return points;
-      };
-
-      const handlePosition = (latitude, longitude) => {
-        const basePosition = [latitude, longitude];
-        setPosition(basePosition);
-        setRandomPoints(generateRandomPoints(basePosition, 5));
-      };
-
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            handlePosition(position.coords.latitude, position.coords.longitude);
-          },
-          (error) => {
-            console.error("Error getting geolocation:", error);
-            const defaultPosition = [-7.77112133034015, 110.37760166727743];
-            handlePosition(defaultPosition[0], defaultPosition[1]);
-          }
+    const fetchData = async () => {
+      try {
+        const { coords } = await getCurrentPosition();
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/landfill/nearby-landfill?latitude=${coords.latitude}&longitude=${coords.longitude}`
         );
-      } else {
-        console.log("Geolocation is not supported by this browser.");
-        const defaultPosition = [-7.77112133034015, 110.37760166727743];
-        handlePosition(defaultPosition[0], defaultPosition[1]);
+        setMarkers(response.data);
+        setPosition([coords.latitude, coords.longitude]);
+      } catch (error) {
+        setPosition([-7.77123151227835, 110.3776016942451])
+        console.error("Error fetching data:", error);
       }
-    }
-  }, [isMounted]);
+    };
+
+    fetchData();
+  }, []);
+
+  const getCurrentPosition = () => {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+  };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       {position && (
         <MapContainer
           center={position}
-          zoom={13}
+          zoom={19}
           scrollWheelZoom
           className="w-screen h-screen"
           attributionControl={false}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          {randomPoints.map((point, index) => (
-            <Marker key={index} position={point} icon={customIcon}>
-              <Popup>
-                Random Point {index + 1}: {point[0].toFixed(6)},{" "}
-                {point[1].toFixed(6)}
-              </Popup>
-            </Marker>
-          ))}
+          {markers.length > 0 &&
+            markers.map((marker, index) => (
+              <Marker
+                key={index}
+                position={[
+                  marker.location.coordinates[1],
+                  marker.location.coordinates[0],
+                ]}
+                icon={customIcon}
+              >
+                <Popup>
+                  <div>
+                    <h3>{marker.name}</h3>
+                    <p>{marker.description}</p>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
         </MapContainer>
       )}
     </div>

@@ -8,5 +8,7 @@ router.get("/nearby-landfill", landFillController.getNearbyLandFills);
 
 router.post("/create-landfill", landFillController.createLandFill);
 
+router.get('/findByName', landFillController.findLandFillByName);
+
 
 module.exports = router;
