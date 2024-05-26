@@ -10,7 +10,6 @@ const LeafletSearch = ({ setPosition }) => {
   const [markers, setMarkers] = useState([]);
   const [isMounted, setIsMounted] = useState(false);
 
-
   const customIcon = new L.Icon({
     iconUrl: "/marker.svg",
     iconSize: [25, 41],
@@ -20,12 +19,11 @@ const LeafletSearch = ({ setPosition }) => {
     shadowAnchor: [12, 41],
   });
 
-
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  useEffect( () => {
+  useEffect(() => {
     if (isMounted) {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
@@ -57,7 +55,6 @@ const LeafletSearch = ({ setPosition }) => {
             setLocalPosition(defaultPosition);
           }
         );
-        
       } else {
         console.log("Geolocation is not supported by this browser.");
         const defaultPosition = [-7.77112133034015, 110.37760166727743];
@@ -76,16 +73,17 @@ const LeafletSearch = ({ setPosition }) => {
 
   useEffect(() => {
     if (setPosition !== null) {
-      setLocalPosition(setPosition);
+      setLocalPosition([
+        setPosition.location.coordinates[1],
+        setPosition.location.coordinates[0],
+      ]);
     }
+    setMarkers((prevMarkers) => {
+      console.log([...prevMarkers, setPosition]);
+      return [...prevMarkers, setPosition];
+    });
     console.log(setPosition);
   }, [setPosition]);
-
-  const getCurrentPosition = () => {
-    return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject);
-    });
-  };
 
   return (
     <div className="w-full h-full">

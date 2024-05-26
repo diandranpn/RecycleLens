@@ -7,14 +7,14 @@ const generateRandomCoordinates = (longitude, latitude, offset) => {
 };
 
 // Central coordinates and offset
-const centralLongitude = 110.37279787479208;
-const centralLatitude = -7.7654462773425825;
+const centralLongitude = 48.23203446305646;
+const centralLatitude = -15.726712535317393;
 const offset = 0.01; // Adjust the offset as needed to vary the coordinates
 
 // Sample data for landfills
 const landfills = [
   {
-    name: 'Landfill A',
+    name: 'Landfill D',
     location: {
       type: 'Point',
       coordinates: generateRandomCoordinates(centralLongitude, centralLatitude, offset)
@@ -23,7 +23,7 @@ const landfills = [
     city: 'Central City'
   },
   {
-    name: 'Landfill B',
+    name: 'Landfill E',
     location: {
       type: 'Point',
       coordinates: generateRandomCoordinates(centralLongitude, centralLatitude, offset)
@@ -32,7 +32,7 @@ const landfills = [
     city: 'Central City'
   },
   {
-    name: 'Landfill C',
+    name: 'Landfill F',
     location: {
       type: 'Point',
       coordinates: generateRandomCoordinates(centralLongitude, centralLatitude, offset)

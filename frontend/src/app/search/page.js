@@ -10,7 +10,7 @@ const Search = () => {
   const [isSearchVisible, setSearchVisible] = useState(false);
   const [keyWord, setKeyword] = useState("");
   const [landfills, setLandfills] = useState([]);
-  const [mapPosition, setMapPosition] = useState(null); // New state for map position
+  const [mapPosition, setMapPosition] = useState(null); 
   const searchBarRef = useRef(null);
   
   const toggleSearchBar = () => {
@@ -27,8 +27,8 @@ const Search = () => {
     }
   };
 
-  const handleLandfillClick = (lat, lng) => {
-    setMapPosition([lat, lng]); // Update map position
+  const handleLandfillClick = (landfill) => {
+    setMapPosition(landfill); // Update map position
     setSearchVisible(false); // Hide the search bar when an item is clicked
   };
 
@@ -104,7 +104,7 @@ const Search = () => {
             <div
               key={index}
               className="p-2 border-b border-gray-300"
-              onClick={() => handleLandfillClick(landfill.location.coordinates[1], landfill.location.coordinates[0])}
+              onClick={() => handleLandfillClick(landfill)}
             >
               <h2 className="font-bold text-lg">{landfill.name}</h2>
               <p className="text-sm">{landfill.description}</p>
