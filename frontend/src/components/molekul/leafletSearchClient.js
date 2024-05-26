@@ -8,6 +8,8 @@ import "leaflet/dist/leaflet.css";
 const LeafletSearch = ({ setPosition }) => {
   const [position, setLocalPosition] = useState(null);
   const [markers, setMarkers] = useState([]);
+  const [isMounted, setIsMounted] = useState(false);
+
 
   const customIcon = new L.Icon({
     iconUrl: "/marker.svg",
@@ -18,38 +20,67 @@ const LeafletSearch = ({ setPosition }) => {
     shadowAnchor: [12, 41],
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { coords } = await getCurrentPosition();
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/landfill/nearby-landfill?latitude=${coords.latitude}&longitude=${coords.longitude}`
-        );
-        setMarkers(response.data);
-        setLocalPosition([coords.latitude, coords.longitude]);
-      } catch (error) {
-        setLocalPosition([-7.77123151227835, 110.3776016942451]);
-        console.error("Error fetching data:", error);
-      }
-    };
 
-    fetchData();
+  useEffect(() => {
+    setIsMounted(true);
   }, []);
 
-  const RecenterAutomatically = ({position}) => {
+  useEffect( () => {
+    if (isMounted) {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            try {
+              const response = await axios.get(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/landfill/nearby-landfill?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`
+              );
+              setMarkers(response.data);
+            } catch (error) {
+              console.error("Error fetching data:", error);
+            }
+            setLocalPosition([
+              position.coords.latitude,
+              position.coords.longitude,
+            ]);
+          },
+          async (error) => {
+            console.error("Error getting geolocation:", error);
+            const defaultPosition = [-7.77112133034015, 110.37760166727743];
+            try {
+              const response = await axios.get(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/landfill/nearby-landfill?latitude=-7.77112133034015&longitude=110.37760166727743`
+              );
+              setMarkers(response.data);
+            } catch (error) {
+              console.error("Error fetching data:", error);
+            }
+            setLocalPosition(defaultPosition);
+          }
+        );
+        
+      } else {
+        console.log("Geolocation is not supported by this browser.");
+        const defaultPosition = [-7.77112133034015, 110.37760166727743];
+        setPosition(defaultPosition);
+      }
+    }
+  }, [isMounted]);
+
+  const RecenterAutomatically = ({ position }) => {
     const map = useMap();
-     useEffect(() => {
-       map.setView(position);
-     }, [position]);
-     return null;
-   }
+    useEffect(() => {
+      map.setView(position);
+    }, [position]);
+    return null;
+  };
 
   useEffect(() => {
     if (setPosition !== null) {
-      setLocalPosition(setPosition)
+      setLocalPosition(setPosition);
     }
     console.log(setPosition);
   }, [setPosition]);
+
   const getCurrentPosition = () => {
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject);
