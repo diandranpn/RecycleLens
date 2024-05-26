@@ -1,3 +1,4 @@
+// Search.js
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import FooterMobileView from "@/components/molekul/footerMobileView";
@@ -6,11 +7,12 @@ import { FaSearch } from "react-icons/fa";
 import axios from "axios";
 
 const Search = () => {
-  const [isSearchVisible, setSearchVisible] = useState(false); // Default to visible
+  const [isSearchVisible, setSearchVisible] = useState(false);
   const [keyWord, setKeyword] = useState("");
   const [landfills, setLandfills] = useState([]);
+  const [mapPosition, setMapPosition] = useState(null); // New state for map position
   const searchBarRef = useRef(null);
-
+  
   const toggleSearchBar = () => {
     setSearchVisible(!isSearchVisible);
   };
@@ -23,6 +25,11 @@ const Search = () => {
     if (searchBarRef.current && !searchBarRef.current.contains(event.target)) {
       setSearchVisible(false);
     }
+  };
+
+  const handleLandfillClick = (lat, lng) => {
+    setMapPosition([lat, lng]); // Update map position
+    setSearchVisible(false); // Hide the search bar when an item is clicked
   };
 
   useEffect(() => {
@@ -56,7 +63,7 @@ const Search = () => {
 
   return (
     <>
-      <LeafletSearch />
+      <LeafletSearch setPosition={mapPosition} /> {/* Pass setPosition prop */}
       <button
         onClick={toggleSearchBar}
         className="fixed bottom-[100px] p-2 bg-slate-400/40 hover:bg-slate-400 rounded-lg text-xl text-black z-[900] m-5"
@@ -94,7 +101,11 @@ const Search = () => {
         </div>
         <div className="overflow-y-scroll flex-grow">
           {landfills.map((landfill, index) => (
-            <div key={index} className="p-2 border-b border-gray-300">
+            <div
+              key={index}
+              className="p-2 border-b border-gray-300"
+              onClick={() => handleLandfillClick(landfill.location.coordinates[1], landfill.location.coordinates[0])}
+            >
               <h2 className="font-bold text-lg">{landfill.name}</h2>
               <p className="text-sm">{landfill.description}</p>
             </div>

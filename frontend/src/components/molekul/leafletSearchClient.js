@@ -1,11 +1,12 @@
+// LeafletSearch.js
 import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import axios from "axios";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-const LeafletSearch = () => {
-  const [position, setPosition] = useState(null);
+const LeafletSearch = ({ setPosition }) => {
+  const [position, setLocalPosition] = useState(null);
   const [markers, setMarkers] = useState([]);
 
   const customIcon = new L.Icon({
@@ -25,9 +26,9 @@ const LeafletSearch = () => {
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/landfill/nearby-landfill?latitude=${coords.latitude}&longitude=${coords.longitude}`
         );
         setMarkers(response.data);
-        setPosition([coords.latitude, coords.longitude]);
+        setLocalPosition([coords.latitude, coords.longitude]);
       } catch (error) {
-        setPosition([-7.77123151227835, 110.3776016942451])
+        setLocalPosition([-7.77123151227835, 110.3776016942451]);
         console.error("Error fetching data:", error);
       }
     };
@@ -35,6 +36,20 @@ const LeafletSearch = () => {
     fetchData();
   }, []);
 
+  const RecenterAutomatically = ({position}) => {
+    const map = useMap();
+     useEffect(() => {
+       map.setView(position);
+     }, [position]);
+     return null;
+   }
+
+  useEffect(() => {
+    if (setPosition !== null) {
+      setLocalPosition(setPosition)
+    }
+    console.log(setPosition);
+  }, [setPosition]);
   const getCurrentPosition = () => {
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject);
@@ -52,6 +67,7 @@ const LeafletSearch = () => {
           attributionControl={false}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <RecenterAutomatically position={position} />
           {markers.length > 0 &&
             markers.map((marker, index) => (
               <Marker
