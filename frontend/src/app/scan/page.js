@@ -79,7 +79,7 @@ const PhotoUpload = () => {
       const formData = new FormData();
       formData.append("image", blob, "photo.png");
 
-      const response = await axios.post("http://localhost:5000/predict", formData, {
+      const response = await axios.post(process.env.NEXT_PUBLIC_FLASK_URL + "/predict", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

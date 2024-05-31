@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      MONGODB_URI: "mongodb://mongodb:27017/senpro"
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  flask-server:
+    build: 
+      context: ./Waste-Classification/deploy_model
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+      - flask-server
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL: "http://backend:5001"
+      - NEXT_PUBLIC_FLASK_URL: "http://localhost:5000"
+    networks:
+      - app-network
+    
+
+
+  mongodb:
+    image: mongo:5.0.25-focal
+    
+    container_name: mongodb_server
+
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  app-network:
