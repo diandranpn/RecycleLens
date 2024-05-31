@@ -28,7 +28,7 @@ const LeafletSearch = ({ setPosition }) => {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
-            try {
+                        try {
               const response = await axios.get(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/landfill/nearby-landfill?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`
               );
@@ -79,7 +79,6 @@ const LeafletSearch = ({ setPosition }) => {
       ]);
     }
     setMarkers((prevMarkers) => {
-      console.log([...prevMarkers, setPosition]);
       return [...prevMarkers, setPosition];
     });
     console.log(setPosition);

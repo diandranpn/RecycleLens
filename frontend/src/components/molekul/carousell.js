@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import {  Autoplay } from "swiper/modules";
 import "swiper/css";
 import axios from "axios";
 import CarousellCard from "../atom/carousellCard";
@@ -44,7 +45,11 @@ const Carousell = () => {
       slidesPerView={slidesPerView}
       onSlideChange={() => console.log("slide change")}
       onSwiper={(swiper) => console.log(swiper)}
-    >
+      autoplay={{
+        delay: 2000,
+        disableOnInteraction: false,
+      }} 
+      modules={[Autoplay]}   >
       {articles.map((article) => (
         <SwiperSlide key={article._id}>
           <CarousellCard
