@@ -24,12 +24,13 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "1000mb" }));
 
 ConnectToMongodb();
 
-const port = process.env.PORT || 5001;
+const port = process.env.PORT || 3000;
 
+app.get("/", (req, res) => res.send("Backend on Vercel"));
 
-// app.listen(port, () => {
-//     console.log(`Server is running on port : ${port}`);
-//   });
+app.listen(port, () => {
+    console.log(`Server is running on port : ${port}`);
+  });
 
   app.use("/article", articleRoute);
   app.use("/landfill", landFillRoute);
