@@ -105,7 +105,7 @@ const PhotoUpload = () => {
         )}
       </div>
       {isVideoVisible && (
-        <div className="w-full p-3">
+        <div className="w-full p-3 mb-[20vh]">
           <button
             onClick={handleCapture}
             className="bg-primary text-white py-2 w-full rounded-lg text-xs font-bold"
