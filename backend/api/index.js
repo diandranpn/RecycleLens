@@ -11,11 +11,9 @@ const landFillRoute = require("../src/routes/landFillRoutes")
 
 
 const app = express();
-const frontendDomain = process.env.DOMAIN_FRONTEND || "http://localhost:3000";
 app.use(
   cors({
-    origin : frontendDomain,
-    credentials: true,
+    origin : "*",
   })
 );
 
