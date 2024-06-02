@@ -119,7 +119,7 @@ const PhotoUpload = () => {
           <div className="w-full h-[70vh] flex flex-col justify-center">
             <img src={imageData} alt="Captured" className="rounded-lg w-full" />
           </div>
-          <div className="flex justify-around mt-2">
+          <div className="flex justify-around mt-2 mb-[20vh]">
             <button
               onClick={handleRetake}
               className="bg-white text-primary py-2 w-full mx-3 rounded-lg text-xs font-bold border-primary border"

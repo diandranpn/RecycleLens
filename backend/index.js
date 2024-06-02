@@ -27,11 +27,13 @@ ConnectToMongodb();
 const port = process.env.PORT || 5001;
 
 
-app.listen(port, () => {
-    console.log(`Server is running on port : ${port}`);
-  });
+// app.listen(port, () => {
+//     console.log(`Server is running on port : ${port}`);
+//   });
 
   app.use("/article", articleRoute);
   app.use("/landfill", landFillRoute);
+
+  export default app
 
   
